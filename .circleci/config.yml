@@ -1,0 +1,23 @@
+version: 2
+jobs:
+  build:
+    working_directory: /go/src/github.com/suzujun/circleci-test
+    docker:
+    - image: circleci/golang:1.10.3
+    steps:
+    - checkout
+    - run:
+        name: update gh-pages
+        command: |
+          echo ">>>pwd:"`pwd`
+          #cd build
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          #  git clone "$CIRCLE_REPOSITORY_URL" .
+          git checkout -q gh-pages
+          echo `date` >> updated.txt
+          git add updated.txt
+          git commit -m "[skip ci] Added text No.${CIRCLE_BUILD_NUM}"
+          echo 'Pushing github pages'
+          git push --force --quiet "https://${GH_TOKEN}@github.com/suzujun/circleci-test.git" master:gh-pages
+
